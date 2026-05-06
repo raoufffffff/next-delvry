@@ -18,11 +18,15 @@ const state =  () =>{
     return "El Menia"
   }
 
- 
+  
   return order.state
 }
-   
-  const articleName = order.productData?.name || order.productData?.title || Product;
+   const removeEmojis = (str) => 
+  str?.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, '').trim() ?? '';
+
+// الاستخدام
+removeEmojis(order.productData?.name)
+  const articleName = removeEmojis(order.productData?.name);
   const getstatenumber = (s) => {
     return states.find(e => e.ar_name == s || e.name == s) 
   }
