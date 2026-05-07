@@ -25,8 +25,18 @@ const state =  () =>{
   str?.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, '').trim() ?? '';
 
 // الاستخدام
-removeEmojis(order.productData?.name)
-  const articleName = removeEmojis(order.productData?.name);
+const removeEmojis = (str) => 
+  str?.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, '').trim() ?? '';
+
+// دمج القيم مع التأكد من وجود مسافات صحيحة وتجنب القيم الفارغة
+const articleName = [
+  removeEmojis(order.productData?.name),
+  order.offerNmae,
+  order.color,
+  order.size
+]
+  .filter(Boolean) // يقوم بحذف أي قيمة undefined أو null أو نص فارغ
+  .join(' ');      // يدمج الباقي بمسافة واحدة فقط بينهم
   const getstatenumber = (s) => {
     return states.find(e => e.ar_name == s || e.name == s) 
   }
