@@ -21,8 +21,7 @@ const state =  () =>{
   
   return order.state
 }
-   const removeEmojis = (str) => 
-  str?.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, '').trim() ?? '';
+   
 
 // الاستخدام
 const removeEmojis = (str) => 
