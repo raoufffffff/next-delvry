@@ -55,7 +55,7 @@ const familyname = nameParts.length > 1 ? nameParts.slice(1).join(" ") : namePar
     to_commune_name:order.city,
     to_wilaya_name: state(),
     product_list: articleName,
-    price: order.price,
+    price: order.total,
     do_insurance: false,
     declared_value: order.total,
     freeshipping: true,
