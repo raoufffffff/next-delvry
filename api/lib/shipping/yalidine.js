@@ -30,8 +30,11 @@ const removeEmojis = (str) =>
 // دمج القيم مع التأكد من وجود مسافات صحيحة وتجنب القيم الفارغة
 const articleName = [
   removeEmojis(order.productData?.name),
+  "|",
   removeEmojis(order.offerName),
+   "|",
   removeEmojis(order.color),
+   "|",
   removeEmojis(order.size)
 ]
   .filter(Boolean) // يقوم بحذف أي قيمة undefined أو null أو نص فارغ
