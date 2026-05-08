@@ -55,7 +55,7 @@ const familyname = nameParts.length > 1 ? nameParts.slice(1).join(" ") : namePar
     price: order.price,
     do_insurance: false,
     declared_value: order.total,
-    freeshipping: false,
+    freeshipping: true,
     is_stopdesk: order.home ? false : true,
      has_exchange: 0
    }]
