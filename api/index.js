@@ -2,7 +2,8 @@ const express = require('express')
 const cors = require('cors')
 const { default: axios } = require('axios');
 const getapi = require('./lib/getapi/getapi');
-const transformOrderForProvider = require('./lib/shipping/mappers')
+const transformOrderForProvider = require('./lib/shipping/mappers');
+const fetchAllYalidineHistories = require('./tracking/yalidinTraking');
 const app = express();
 
 app.use(cors());
@@ -13,50 +14,25 @@ app.get('/', (req, res) => {
     res.send("hello")
 })
 
-
+ 
  
 
   
 
-app.post("/test", async (req, res) => {
-    const { company } = req.body
+app.post("/auth", async (req, res) => {
+    const { name, Key, Token } = req.body
+     
     try {
         let result;
-        if (company.name === "ecom_delivery") {
-            result = await axios.get(`${getapi(company.name)}/Test`, {
-                headers: {
-                    // 2. FIXED: Capitalized 'Token' and 'Key' to match documentation
-                    "Token": company.Token,
-                    "Key": company.Key,
-                    // 3. ADDED: Good practice to explicitly ask for JSON
-                    "Accept": "application/json"
-                }
-            },
-            );
-        } else if (company.name === "swift_express") {
-            result = await axios.get(`https://swift.ecotrack.dz/api/v1/validate/token?api_token=${company.Token}`)
-        } else if (company.name === "noas express"){
-             result =await axios.post(
-      `https://app.noest-dz.com/api/public/create/order`, 
-      {
-        user_guid:company.Key, // المعلمة المطلوبة دائماً [cite: 18]
-        ...myNewOrder // باقي تفاصيل الطلبية (الاسم، الهاتف، العنوان...)
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${company.Token }`, // التوثيق عبر الهيدر [cite: 6, 15]
-          'Content-Type': 'application/json'      // نوع المحتوى [cite: 16]
-        }
-      }
-    );
-        } else if (company.name === "yalidine"){
+        
+         if ( name === "yalidine"){
            
             
             result = await axios.get("https://api.yalidine.app/v1/wilayas/", {
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-API-ID': company.Key,
-                    'X-API-TOKEN':company.Token
+                    'X-API-ID': Key,
+                    'X-API-TOKEN': Token
                 }
             })
             
@@ -85,37 +61,15 @@ app.post("/test", async (req, res) => {
 
 app.post("/send-order", async (req, res) => {
     const { company, order } = req.body
- console.log(order);
- 
+  
     const finalorder = transformOrderForProvider(order, company.name)
+    console.log(finalorder);
+    
      try {
         let result;
-        if (company.name === "ecom_delivery") {
-            result = await axios.post(`${getapi(company.name)}/Colis`, finalorder, {
-                headers: {
-                    "Token": company.Token,
-                    "Key": company.Key,
-                    "Accept": "application/json"
-                }
-            },
-            );
-        } else if (company.name === "swift_express") {
-            result = await axios.post(`https://swift.ecotrack.dz/api/v1/create/order?api_token=${company.Token}&${finalorder}`)
-        } else if (company.name === "noas express"){
-             result =await axios.post(
-      `https://app.noest-dz.com/api/public/create/order`, 
-      {
-        user_guid:company.Key, // المعلمة المطلوبة دائماً [cite: 18]
-        ...finalorder // باقي تفاصيل الطلبية (الاسم، الهاتف، العنوان...)
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${company.Token }`, // التوثيق عبر الهيدر [cite: 6, 15]
-          'Content-Type': 'application/json'      // نوع المحتوى [cite: 16]
-        }
-      }
-    );
-        } else if (company.name === "yalidine"){
+       
+  
+       if (company.name === "yalidine"){
            
             console.log(company);
             
@@ -147,9 +101,39 @@ app.post("/send-order", async (req, res) => {
         }
     }
 })
-// mongodb+srv://nextcommercehelp_db_user:tYMjafBuI8TXteJL@cluster0.sgrxnb2.mongodb.net/?appName=Cluster0
 
 
+app.post("/track-order", async (req, res) => {  
+    const { name, key, token } = req.body
+  console.log(name, key, token);
+  
+      try {
+         let result;
+       if ( name === "yalidine") {
+    result = await fetchAllYalidineHistories(name, key, token);
+    console.log(`تم جلب ${result.length} طلب`);
+}
+
+ 
+         res.json({
+             length: result.length,   
+             good: true,
+            result: result,
+        });
+    } catch (error) {
+        console.log(error);
+        
+        // Improved error logging to see exactly what failed
+        if (error.response) {
+            console.log("Server Error:" );
+            res.status(error.response.status).json(error.response.data);
+        } else {
+            console.log("Connection Error:", error.message);
+            res.status(500).json({ error: error.message });
+        }
+    }
+})
 
 app.listen(3010, () => console.log("✅ Server running on port 3010."));
+// mongodb+srv://nextcommercehelp_db_user:tYMjafBuI8TXteJL@cluster0.sgrxnb2.mongodb.net/?appName=Cluster0
 
