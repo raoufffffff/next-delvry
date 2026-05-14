@@ -8,9 +8,12 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+ 
 
+ 
 
 app.get('/', (req, res) => {
+    
     res.send("hello")
 })
 
@@ -36,6 +39,29 @@ app.post("/auth", async (req, res) => {
                 }
             })
             
+        } else if (name === "Dhd Livraison"){
+                result = await axios.get(`https://dhd.ecotrack.dz/api/v1/validate/token?api_token=${Token}`, {
+                headers: {
+                     'Content-Type': 'application/json',
+                   
+                }
+            })
+        }
+         else if (name === "Imir Logistics"){
+           result = await axios.get(`https://imir.ecotrack.dz/api/v1/validate/token?api_token=${Token}`, {
+                headers: {
+                     'Content-Type': 'application/json',
+                    
+                }
+            })
+        }
+         else if (name === "swift express"){
+           result = await axios.get(`https://swift.ecotrack.dz/api/v1/validate/token?api_token=${Token}`, {
+                headers: {
+                     'Content-Type': 'application/json',
+                    
+                }
+            })
         }
 
 
@@ -61,6 +87,7 @@ app.post("/auth", async (req, res) => {
 
 app.post("/send-order", async (req, res) => {
     const { company, order } = req.body
+  console.log(company);
   
     const finalorder = transformOrderForProvider(order, company.name)
     console.log(finalorder);
@@ -81,7 +108,31 @@ app.post("/send-order", async (req, res) => {
                 }
             })
             
+        }  else if (company.name === "Dhd Livraison"){
+                result = await axios.post (`https://platform.dhd-dz.com/api/v1/create/order?api_token=${company.Token}&${finalorder}`, {
+                headers: {
+                     'Content-Type': 'application/json',
+                   
+                }
+            })
         }
+         else if (company.name === "Imir Logistics"){
+           result = await axios.post(`https://imir.ecotrack.dz/api/v1/create/order?api_token=${company.Token}&${finalorder}`, {
+                headers: {
+                     'Content-Type': 'application/json',
+                    
+                }
+            })
+        }
+         else if (company.name === "swift express"){
+           result = await axios.post(`https://swift.ecotrack.dz/api/v1/create/order?api_token=${company.Token}&${finalorder}`, {
+                headers: {
+                     'Content-Type': 'application/json',
+                    
+                }
+            })
+        }
+
 
  
          res.json({
