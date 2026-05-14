@@ -10,7 +10,7 @@ const formatToswift = (order) => {
     // 2. Helper to get Wilaya Code
     
  
-    const wilayaCode =   states.find(e => e.name == order.state).code ;
+    const wilayaCode =   states.find(e => e.name == order.state).id  ;
       // 3. Use URLSearchParams to handle spaces and special characters automatically
     const params = new URLSearchParams();
     params.append("nom_client", String(order.name));
