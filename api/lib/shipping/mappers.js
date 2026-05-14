@@ -7,8 +7,12 @@ const transformOrderForProvider = (order, provider) => {
   switch (provider) {
     case 'ecom_delivery':
       return formatToEcomDelivery(order);
-    case 'swift_express':
+    case "swift express":
       return formatToswift(order);
+     case "Dhd Livraison":
+      return formatToswift(order);  
+     case "Imir Logistics":
+      return formatToswift(order);  
     case "noas express":
       return formatTonoest(order);
      case "yalidine":
