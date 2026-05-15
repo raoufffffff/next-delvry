@@ -25,7 +25,7 @@ async function fetchAllYalidineHistories(name, Key, Token) {
             }
 
             // التوقف إذا وصلنا لـ 1000 عنصر أو لم يعد هناك صفحات تالية
-            hasMore = false
+            hasMore = links?.next ? true : false
             currentUrl = links?.next;
         }
     } catch (error) {
