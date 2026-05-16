@@ -14,7 +14,7 @@ const normalizeStateName = (name) => STATE_NAME_MAP[name] ?? name;
 
 const formatToyalidine = (order) => {
   const cleanName = removeEmojis(order.productData?.name);
-  const cleanNote = removeEmojis(order.note);
+  const cleanNote = removeEmojis(order.offerNmae);
 
   // Join name and note with " | ", only if both exist
   const articleName = [cleanName, cleanNote]
