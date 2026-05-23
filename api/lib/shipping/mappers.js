@@ -13,6 +13,8 @@ const transformOrderForProvider = (order, provider) => {
       return formatToswift(order);  
      case "Imir Logistics":
       return formatToswift(order);  
+     case "packers":
+      return formatToswift(order);    
     case "noas express":
       return formatTonoest(order);
      case "yalidine":

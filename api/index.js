@@ -10,6 +10,25 @@ app.use(cors());
 app.use(express.json());
  
 
+
+// const p = require('./communes/packers.json');
+// const fs = require('fs');
+// const path = require('path');
+
+// app.get('/', (req, res) => {
+//     const outputPath = path.join(__dirname, './communes/communes_new.json');
+
+//     const result = Object.keys(p)
+//         .sort((a, b) => Number(a) - Number(b))
+//         .map(key => ({
+//             ...p[key] 
+             
+//         }));
+
+//     fs.writeFileSync(outputPath, JSON.stringify(result, null, 2), 'utf-8');
+    
+//     res.send('✅ تم إنشاء الملف communes_new.json');
+// });
  
 
 app.get('/', (req, res) => {
@@ -41,6 +60,14 @@ app.post("/auth", async (req, res) => {
             
         } else if (name === "Dhd Livraison"){
                 result = await axios.get(`https://dhd.ecotrack.dz/api/v1/validate/token?api_token=${Token}`, {
+                headers: {
+                     'Content-Type': 'application/json',
+                   
+                }
+            })
+        }
+         else if (name === "packers"){
+                result = await axios.get(`https://packers.ecotrack.dz/api/v1/validate/token?api_token=${Token}`, {
                 headers: {
                      'Content-Type': 'application/json',
                    
@@ -118,6 +145,14 @@ app.post("/send-order", async (req, res) => {
         }
          else if (company.name === "Imir Logistics"){
            result = await axios.post(`https://imir.ecotrack.dz/api/v1/create/order?api_token=${company.Token}&${finalorder}`, {
+                headers: {
+                     'Content-Type': 'application/json',
+                    
+                }
+            })
+        }
+         else if (company.name === "packers"){
+           result = await axios.post(`https://packers.ecotrack.dz/api/v1/create/order?api_token=${company.Token}&${finalorder}`, {
                 headers: {
                      'Content-Type': 'application/json',
                     
