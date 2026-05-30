@@ -8,7 +8,7 @@ const removeEmojis = (str) =>
 
     const isStopDesk = order.home ? 0 : 1;
  const cleanName = removeEmojis(order.productData?.name);
-  const cleanNote = removeEmojis(order.note);
+  const cleanNote = removeEmojis(order.offerNmae || order.note);
 
   // Join name and note with " | ", only if both exist
   const articleName = [cleanName, cleanNote]
