@@ -3,8 +3,17 @@ const states = require("../../states.json");
 
 const formatToswift = (order) => {
 
-    const isStopDesk = order.home ? 0 : 1;
+const removeEmojis = (str) =>
+  str?.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, "").trim() ?? "";
 
+    const isStopDesk = order.home ? 0 : 1;
+ const cleanName = removeEmojis(order.productData?.name);
+  const cleanNote = removeEmojis(order.note);
+
+  // Join name and note with " | ", only if both exist
+  const articleName = [cleanName, cleanNote]
+    .filter(Boolean)
+    .join(" | ");
     // 1. Get Product Name safely
 
     // 2. Helper to get Wilaya Code
@@ -18,7 +27,7 @@ const formatToswift = (order) => {
     params.append("telephone_2", "");
     params.append("adresse", `${order.city || ''}`);
     params.append("code_postal", "");
-    params.append("produit", order.productData.name || "Products");
+    params.append("produit", articleName || "Products");
     params.append("commune",order.city); // This will auto-convert "Bir El Djir" to "Bir+El+Djir"
     params.append("code_wilaya", wilayaCode);
     params.append("montant", order.total);
